@@ -85,9 +85,10 @@ When no profile picture is available, clients should display a **single initial*
 background. The initial should be derived from:
 1. `display_name` field in metadata — the human-readable name the user chose to display
 2. `name` field in metadata — the short identifier
-3. Hex character at index 28 of the pubkey, mapped to a letter (fallback)
+3. `nip05` field in metadata — the internet identifier (local part, before the `@`. If it starts with `_@` or `@`, use the first letter of the domain instead)
+4. Hex character at index 28 of the pubkey, mapped to a letter (fallback)
 
-For case (3), the character at index 28 of the pubkey (hex `0-9`, `a-f`, values 0-15) should be
+For case (4), the character at index 28 of the pubkey (hex `0-9`, `a-f`, values 0-15) should be
 mapped to a letter `A-P` (0 → `A`, 1 → `B`, ... `a` → `K`, ... `f` → `P`). This ensures
 the fallback is always a letter and never a digit. Index 28 is chosen because it lies in the
 middle of the pubkey, which is not affected by vanity mining.
