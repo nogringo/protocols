@@ -1,4 +1,4 @@
-# NIP Scheduler DVM
+# Scheduler DVM
 
 `draft` `optional`
 
@@ -121,8 +121,6 @@ The DVM sends status updates using `kind:7000` with no `p` tag to avoid linking 
 | `failed` | All relays rejected or were unreachable |
 | `cancelled` | The job was cancelled via `kind:5` |
 | `error` | The job request was invalid |
-
-
 
 ## 5. DVM Discoverability (NIP-89)
 

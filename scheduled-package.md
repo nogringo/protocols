@@ -1,4 +1,4 @@
-# Scheduled Package Protocol
+# Scheduled Package
 
 `draft` `optional`
 

@@ -1,0 +1,26 @@
+{
+  "id": "349f11be35059f3e436fbd492294a912747ec1e6fcdbdb3987fd7d0f1f9e34c1",
+  "pubkey": "660d8c78651f70487ec9b8ddc283e29cf2561693dda3ba246d3fd3c08dbb7083",
+  "created_at": 1777574165,
+  "kind": 30818,
+  "tags": [
+    [
+      "d",
+      "string-color"
+    ],
+    [
+      "title",
+      "String Color"
+    ],
+    [
+      "h",
+      "660d8c78651f70487ec9b8ddc283e29cf2561693dda3ba246d3fd3c08dbb7083"
+    ],
+    [
+      "summary",
+      "A general protocol for getting great string-based colors"
+    ]
+  ],
+  "content": "A deterministic method for deriving a visually consistent, UI-optimized color from any string. Designed to produce colors that read well as text, backgrounds, borders, and indicator dots across dark, light, sepia, ivory, and grey themes. Simpler and more perceptually balanced than hash-RGB approaches (e.g. XEP-0392).\n# String Color\nAny UTF-8 string can be mapped to a unique color via a polynomial character-code hash.\n## Hashing\n1. Normalize the input: `trim()` and `toUpperCase()`\n2. Return a neutral grey `rgb(128, 128, 128)` for empty strings\n3. Compute a BigInt by summing character codes weighted by powers of 256:\n```\nnumber = Σ ( charCode(i) × 256ⁱ )   for i in [0, len)\n```\n4. Derive hue: `hue = number mod 360`\n## HSV Parameters\n```\nS = 0.70\nV = 0.70   if  32 ≤ hue ≤ 204   (warm yellows, greens, cyans — perceptually bright)\nV = 0.96   if 216 ≤ hue ≤ 273   (blues — perceptually dark, need boosting)\nV = 0.90   otherwise             (reds, magentas, warm blues)\n```\n## HSV → RGB Conversion\nStandard HSV-to-RGB via intermediate chroma values:\n```\nh = hue / 60\nc = V × S\nx = c × (1 − |( h mod 2 ) − 1|)\nm = V − c\n```\nSector assignment (h in [0,6)):\n| h range | R  | G  | B  |\n|---------|----|----|-----|\n| [0, 1)  | c  | x  | 0  |\n| [1, 2)  | x  | c  | 0  |\n| [2, 3)  | 0  | c  | x  |\n| [3, 4)  | 0  | x  | c  |\n| [4, 5)  | x  | 0  | c  |\n| [5, 6)  | c  | 0  | x  |\nFinal output: `R, G, B = round((r + m) × 255)` for each channel.\n# Hex String Color\nWhen the input is a hexadecimal string (e.g. a pubkey of a Nostr \n[[nostr-profile|Profile]]\n ), parse it directly as a BigInt rather than hashing character codes:\n```\nnumber = BigInt.parse(hex, radix: 16)\nhue    = number mod 360\n```\nThen apply the same HSV conversion with one difference — `V` for the warm/green/cyan range is `0.75` instead of `0.70`, which accounts for the higher average luminance of hex-encoded keys in that range:\n```\nV = 0.75   if  32 ≤ hue ≤ 204\nV = 0.96   if 216 ≤ hue ≤ 273\nV = 0.90   otherwise\n```\n# Text Readability Adjustment\nWhen rendering the derived color as text (author names, mentions, etc.), apply a small brightness correction to the RGB output:\n- **Dark mode**: multiply each channel by `1.08` (+8%)\n- **Light mode**: multiply each channel by `0.95` (−5%)\nClamp each channel to `[0, 255]`.\n# Client Recommendations\n- MUST normalize strings to trimmed uppercase before hashing\n- MUST use BigInt arithmetic for the polynomial hash to avoid integer overflow\n- SHOULD apply the text adjustment when rendering colored names or mentions\n- MAY skip the text adjustment for non-text uses (backgrounds, borders, avatars)\n- SHOULD fall back to `rgb(128, 128, 128)` for empty or invalid inputs\n\n# See Also\n- [[nostr-profile|Profile]]",
+  "sig": "24c9d37583e4fdcccfcf439b58d21ff2bb0622cf31d610fada8bfae06b023f50f1b9037790d47cd6d84e06aae327d8a1e50b217b4f5a698ab90ff676fde92eae"
+}
