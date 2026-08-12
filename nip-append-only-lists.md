@@ -1,10 +1,5 @@
-NIP-XX
+NIP Append-Only Lists
 ======
-
-Append-Only Lists
------------------
-
-`draft` `optional`
 
 This NIP defines append-only event kinds for list membership, as a complement to NIP-51. Tag layout, encrypted-content format, and `d` tag semantics are inherited from NIP-51 unchanged; only the storage model differs.
 
@@ -28,7 +23,7 @@ Both are *regular* (non-replaceable) event kinds.
 
 Tag layout and encrypted-content format follow NIP-51:
 
-- A single `d` tag names the list.
+- A single `d` tag names the list. Standard NIP-51 lists have no `d` tag, so their append-only counterpart uses the kind number as the name (`["d", "10000"]` for the mute list).
 - Entries are referenced via single-letter tags (`e`, `p`, `a`, `t`, …) and/or via the NIP-44 self-encrypted content, with the same plaintext format as NIP-51 (a JSON-stringified array of tag tuples).
 - The effective set of entries operated on by the event is the union of the public tag references and the entries decoded from the content.
 
