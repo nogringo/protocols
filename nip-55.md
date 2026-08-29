@@ -82,6 +82,14 @@ Every request has a `type` (the method name) and a payload. The payload is passe
 - `pubkey` is the public key of the other party used for encryption/decryption, in hex format.
 - `id` is an optional client-chosen string echoed back in the result, used to match responses when several requests are sent without waiting.
 
+## Errors
+
+`rejected` means the _user_ refused the request, and nothing else. To let _client_ tell a refusal from a failure, _signer_ MAY return an `error` in place of `result`: an intent extra (with `RESULT_OK`), a cursor column, or an `error` param appended to the `callbackUrl`. Its value is prefixed with a machine-readable reason and `: `:
+
+- `denied: ` - rejected by the _user_ or by a remembered "always reject" choice.
+- `crypto: ` - the operation itself failed, e.g. the ciphertext could not be decrypted with the keys the _signer_ holds.
+- `unsupported: ` - the request `type` is unknown, or `current_user` is not present in the _signer_.
+
 ## Using Intents
 
 The payload is the `nostrsigner:` URI data; all other params are intent extras. The result is returned via `registerForActivityResult` / `rememberLauncherForActivityResult`.

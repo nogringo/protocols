@@ -25,6 +25,14 @@ async window.nostr.nip44.decrypt(pubkey, ciphertext, current_user?): string // t
 
 `pubkey` on the event object and `current_user` on the encryption functions both name the user key to act with. When set, the signer must use that key or reject the request. Signers that predate this may ignore it silently, so clients should check the `pubkey` of the event returned by `signEvent`.
 
+### Errors
+
+These methods reject their promise on failure. The rejection reason SHOULD be an `Error` whose `message` is prefixed with a machine-readable reason and `: `, so that the caller can tell a refusal from a failure:
+
+- `denied: ` - rejected by the user or by the site's permissions.
+- `crypto: ` - the operation itself failed, e.g. the ciphertext could not be decrypted with the keys the signer holds.
+- `unsupported: ` - the method or the requested `current_user` is not available.
+
 ### Recommendation to Extension Authors
 To make sure that the `window.nostr` is available to nostr clients on page load, the authors who create Chromium and Firefox extensions should load their scripts by specifying `"run_at": "document_end"` in the extension's manifest.
 

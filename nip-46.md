@@ -163,6 +163,14 @@ The `content` field is a JSON-RPC-like message that is [NIP-44](nostr:naddr1qvzq
 
 Requests made with unknown or unsupported methods MUST be replied with an error.
 
+When returning an `error`, _remote-signer_ SHOULD prefix it with a machine-readable reason and `: `, so that _client_ can tell a refusal from a failure:
+
+- `denied: ` - rejected by _user_ or by the session's permissions.
+- `crypto: ` - the operation itself failed, e.g. the ciphertext could not be decrypted with the keys _remote-signer_ holds.
+- `unsupported: ` - unknown or unsupported method.
+
+This convention does not apply to Auth Challenges, where `error` carries a URL.
+
 ## Example flow for signing an event
 
 - `remote-signer-pubkey` is `fa984bd7dbb282f07e16e7ae87b26a2a7b9b90b7246a44771f0cf5ae58018f52`
