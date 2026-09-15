@@ -128,6 +128,8 @@ When adding expiration tags to both `seal` and `gift wrap` layers, implementatio
 Since signing keys are random, relays SHOULD delete `kind:1059` events whose p-tag matches the signer of
 [NIP-09](nostr:naddr1qvzqqqrcvypzq2eeknl7v2fnm7tsuxfkds3vrcyjl9fls070a465urcy6k3mgk0eqqrxu6ts95crjpl6tec) deletions or [NIP-62](nostr:naddr1qvzqqqrcvypzq2eeknl7v2fnm7tsuxfkds3vrcyjl9fls070a465urcy6k3mgk0eqqrxu6ts95mrywh2xja) vanish requests.
 
+To protect recipient metadata, relays SHOULD only serve `kind 5` events with a `k` tag of `1059` to their author, and clients SHOULD include this `k` tag when deleting gift wraps. Otherwise the sender, who knows the gift wrap id, learns when the recipient deleted it. Likewise, relays SHOULD answer a republished `kind 1059` with the same `OK` message whether it was deleted or is still stored. Clients SHOULD NOT delete other kinds in the same `kind 5` as gift wraps.
+
 ## An Example
 
 Let's send a wrapped `kind 1` message between two parties asking "Are you going to the party tonight?"
