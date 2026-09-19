@@ -69,10 +69,14 @@ The client publishes a standard NIP-09 delete event tagging the `kind:5905` to c
 {
   "kind": 5,
   "tags": [
-    ["e", "<id of the kind:5905 event to cancel>"]
+    ["e", "<id of the kind:5905 event to cancel>"],
+    ["k", "5905"],
+    ["p", "<dvm_pubkey>"]
   ]
 }
 ```
+
+The deletion MUST include a `p` tag with the DVM's pubkey.
 
 The DVM MUST send a `kind:7000` feedback with `status:cancelled` after processing the deletion.
 
