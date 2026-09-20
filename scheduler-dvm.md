@@ -95,16 +95,15 @@ The client decrypts each event's `content` locally to reconstruct the list of sc
 
 ## 4. Job Feedback (DVM -> Client)
 
-The DVM sends status updates using `kind:7000` with no `p` tag to avoid linking the feedback to the client's pubkey. The `content` is encrypted using a one-time ephemeral keypair that the DVM destroys immediately after use.
+The DVM sends status updates using `kind:7000` with no `p` tag to avoid linking the feedback to the client's pubkey. The `r` tag carries the `job_id`, which only the client and the DVM know, so it acts as a private index for the client to find its own feedback.
 
 ```json
 {
   "kind": 7000,
   "pubkey": "<dvm_pubkey>",
-  "content": "<nip44_encrypt(ephemeral_privkey, client_pubkey, feedback_payload)>",
+  "content": "<nip44_encrypt(client_pubkey, dvm_privkey, feedback_payload)>",
   "tags": [
-    ["r", "<job_id>"],
-    ["ephemeral-pubkey", "<ephemeral_pubkey>"]
+    ["r", "<job_id>"]
   ]
 }
 ```
