@@ -14,7 +14,7 @@ All Nostr Mail labels use the namespace: `mail`
 
 ### Adding a Label
 
-To add a label to an email, sign a kind 1985 event and put it, without a seal, in a NIP-59 gift wrap (kind 1059) addressed to the user:
+To add a label to an email, sign a kind 1985 event:
 
 ```json
 {
@@ -23,11 +23,26 @@ To add a label to an email, sign a kind 1985 event and put it, without a seal, i
   "tags": [
     ["L", "mail"],
     ["l", "<label>", "mail"],
-    ["e", "<gift_wrap_event_id>", "", "labelled"]
+    ["e", "<email_id>", "", "labelled"]
   ],
   "content": ""
 }
 ```
+
+`<email_id>` identifies the email the label applies to: the rumor id for a gift wrapped email, the event id for a public one.
+
+Put that signed event, without a seal, in a NIP-59 gift wrap (kind 1059) addressed to the user:
+
+```json
+{
+  "kind": 1059,
+  "pubkey": "<random_one_time_pubkey>",
+  "tags": [["p", "<user_pubkey>"]],
+  "content": "<nip44(signed_1985_event_json)>"
+}
+```
+
+The wrap is encrypted with NIP-44 from the one-time key to the user's own pubkey, and published to the user's DM relays (kind 10050).
 
 ### Removing a Label
 
@@ -45,18 +60,44 @@ To remove a label, publish a NIP-09 deletion request (kind 5) targeting the gift
 }
 ```
 
+### Reading Labels
+
+Labels arrive through the kind 1059 subscription on `p` = the user's pubkey, alongside emails. A wrap is dispatched on the kind of the event it yields.
+
+A kind 1985 event authored by the user and published outside a gift wrap carries the same meaning.
+
+## Identifiers
+
+User folders and user tags are identified by `<id>`: 16 lowercase hexadecimal characters, drawn at random when the folder or tag is created. An id never changes.
+
+`inbox`, `sent`, `archive`, `trash` and `spam` are reserved and MUST NOT be issued as an id.
+
+Names, colors and order live in the private settings event. See [Nostr Mail Settings](nostr-mail-settings.md).
+
 ## Standard Labels
 
 ### Folders
 
-Emails without a folder label are considered to be in the inbox (default state).
+An email with no folder label falls to the first user folder whose condition it matches, see [Nostr Mail Settings](nostr-mail-settings.md), and to its natural mailbox when none matches: `sent` when its sender is the user, `inbox` otherwise.
+
+Folder labels are mutually exclusive. Adding one requires removing the one already present.
 
 | Label | Description |
 |-------|-------------|
-| `folder:trash` | Email is in the trash |
+| `folder:inbox` | Email is in the inbox |
+| `folder:sent` | Email is in sent |
 | `folder:archive` | Email is archived |
+| `folder:trash` | Email is in the trash |
 | `folder:spam` | Email is marked as spam |
-| `folder:<custom>` | Custom folder (user-defined) |
+| `folder:<id>` | Email is in a user folder |
+
+A `folder:trash` or `folder:archive` label event MAY name the folder the email left:
+
+```json
+["prev-folder", "<id>"]
+```
+
+Restoring the email applies that folder again.
 
 ### Read State
 
@@ -77,11 +118,11 @@ Emails without flag labels have no special flags (default state).
 
 ### Custom Tags
 
-Users can create custom tags for organization:
+Users can create custom tags for organization. An email carries any number of them.
 
 | Label | Description |
 |-------|-------------|
-| `tag:<name>` | Custom user-defined tag |
+| `tag:<id>` | Custom user-defined tag |
 
 ## Examples
 
@@ -95,7 +136,8 @@ Users can create custom tags for organization:
   "tags": [
     ["L", "mail"],
     ["l", "folder:trash", "mail"],
-    ["e", "def456...", "", "labelled"]
+    ["e", "def456...", "", "labelled"],
+    ["prev-folder", "9f2c1a7b4d3e5f60"]
   ],
   "content": ""
 }
@@ -152,7 +194,8 @@ When an email has no associated label events:
 
 | Property | Default State |
 |----------|---------------|
-| Folder | Inbox |
+| Folder | Natural mailbox |
 | Read state | Unread |
 | Starred | Not starred |
 | Important | Not important |
+| Tags | None |
