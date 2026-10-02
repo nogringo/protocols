@@ -26,6 +26,7 @@ Tag layout and encrypted-content format follow NIP-51:
 - A single `d` tag names the list. Standard NIP-51 lists have no `d` tag, so their append-only counterpart uses the kind number as the name (`["d", "10000"]` for the mute list).
 - Entries are referenced via single-letter tags (`e`, `p`, `a`, `t`, …) and/or via the NIP-44 self-encrypted content, with the same plaintext format as NIP-51 (a JSON-stringified array of tag tuples).
 - The effective set of entries operated on by the event is the union of the public tag references and the entries decoded from the content.
+- An entry is identified by its tag name and first value; additional elements (relay hints, petnames, etc.) do not affect membership.
 
 ## Example
 
@@ -60,6 +61,23 @@ Later, they remove `banana`:
 ```
 
 The resulting state of the `fruits` list for this author is `{apple, cherry}`.
+
+A single list can also hold opinions by putting the opinion in an additional element:
+
+```jsonc
+{
+  "kind": 1990,
+  "created_at": 1715000000,
+  "tags": [
+    ["d", "fruit-opinions"],
+    ["t", "apple", "like"],
+    ["t", "durian", "dislike"]
+  ],
+  "content": ""
+}
+```
+
+The user likes `apple`, dislikes `durian`, and has no opinion on any other fruit. Removing `apple` withdraws the opinion without turning it into a dislike.
 
 ## State computation
 
