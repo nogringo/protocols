@@ -21,6 +21,7 @@ A theme consists of colors, optional fonts, and an optional background. Colors a
     ["c", "#1a1a2e", "background"],
     ["c", "#e0e0e0", "text"],
     ["c", "#6c3ce0", "primary"],
+    ["color-scheme", "dark"],
     ["f", "Inter", "https://example.com/inter.woff2", "body"],
     ["f", "Playfair Display", "https://example.com/playfair.woff2", "title"],
     ["bg", "url https://example.com/bg.jpg", "mode cover", "m image/jpeg", "dim 1920x1080"],
@@ -40,6 +41,8 @@ The `content` field is unused and MUST be an empty string (`""`).
 |---------|----------|---------------------------------------------------------------------------------------|
 | `d`     | Yes      | Unique identifier (slug) for this theme, e.g. `"mk-dark-theme"`                      |
 | `c`     | Yes (×3) | Hex color with marker. See [Color Tags](#color-tags).                                 |
+| `color-scheme` | No | `"light"` or `"dark"`. See [Color Tags](#color-tags).                                |
+| `material` | No   | Material Design 3 seed and variant. See [Color Tags](#color-tags).                   |
 | `f`     | No       | Font declaration. See [Font Tag](#font-tag).                                          |
 | `bg`    | No       | Background media. See [Background Tag](#background-tag).                              |
 | `title` | Yes      | Human-readable theme name                                                             |
@@ -71,6 +74,7 @@ Replaceable event that represents the user's currently active profile theme. Onl
     ["f", "Playfair Display", "https://example.com/playfair.woff2", "title"],
     ["bg", "url https://example.com/bg.jpg", "mode cover", "m image/jpeg"],
     ["title", "MK Dark Theme"],
+    ["a", "36767:<pubkey>:mk-dark-theme"],
     ["alt", "Active profile theme"]
   ]
 }
@@ -85,9 +89,12 @@ The `content` field is unused and MUST be an empty string (`""`).
 | Tag     | Required | Description                                                                           |
 |---------|----------|---------------------------------------------------------------------------------------|
 | `c`     | Yes (×3) | Hex color with marker. See [Color Tags](#color-tags).                                 |
+| `color-scheme` | No | `"light"` or `"dark"`. See [Color Tags](#color-tags).                                |
+| `material` | No   | Material Design 3 seed and variant. See [Color Tags](#color-tags).                   |
 | `f`     | No       | Font declaration. See [Font Tag](#font-tag).                                          |
 | `bg`    | No       | Background media. See [Background Tag](#background-tag).                              |
 | `title` | No       | Human-readable name for the theme                                                     |
+| `a`     | No       | Source theme definition: `"36767:<pubkey>:<d>"`                                       |
 | `alt`   | Yes      | NIP-31 human-readable fallback                                                        |
 
 ### Client Behavior
@@ -115,6 +122,8 @@ Format: `["c", "#rrggbb", "<marker>"]`
 
 - All three markers (`"primary"`, `"text"`, `"background"`) MUST be present.
 - Only one `c` tag per marker is allowed.
+- An optional `["color-scheme", "light" | "dark"]` tag sets the theme's scheme.
+- An optional `["material", "<seed>", "<variant>"]` tag lets Material Design 3 clients generate the full scheme from a seed color. Variants: `tonal-spot`, `fidelity`, `monochrome`, `neutral`, `vibrant`, `expressive`, `content`, `rainbow`, `fruit-salad`.
 
 ### Font Tag
 
