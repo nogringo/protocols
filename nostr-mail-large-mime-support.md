@@ -46,6 +46,7 @@ This allows Nostr Mail to support emails of any size.
     ["decryption-key", "<base64_key>"],
     ["decryption-nonce", "<base64_nonce>"],
     ["x", "<sha256_hash>"],
+    ["size", "<size_in_bytes>"],
     ["subject", "Hello"],
     ["from", "alice@nostr.mail"],
     ["to", "bob@example.com"],
@@ -64,6 +65,7 @@ This allows Nostr Mail to support emails of any size.
 | `decryption-key` | Conditional | The decryption key (only for Blossom MIME) |
 | `decryption-nonce` | Conditional | The decryption nonce (only for Blossom MIME) |
 | `x` | Conditional | SHA-256 hex of encrypted MIME (only for Blossom MIME) |
+| `size` | No | Size of the encrypted MIME in bytes (only for Blossom MIME) |
 | `subject` | No | Email subject |
 | `from` | No | From address |
 | `to` | No | To address |
