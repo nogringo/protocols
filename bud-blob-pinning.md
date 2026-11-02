@@ -10,6 +10,7 @@ The `upload` token ([BUD-11](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70
 
 - Without `p` tags, the request pins the blob for the signer.
 - With `p` tags, it pins the blob for each `p` pubkey, and not for the signer.
+- Without a token, it pins the blob for no one.
 - If the server refuses one of the `p` pubkeys, it rejects the request with `403 Forbidden`.
 
 `HEAD /upload` ([BUD-06](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70u8zl0j6sh6cf8agp2grfgmkt7qqrxyaty95crvcz6ed2)) accepts the same `p` tags and answers as `PUT /upload` would.
@@ -34,8 +35,6 @@ The `upload` token ([BUD-11](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70
 
 Pins a blob the server already stores. The request has no body. The token MUST have `t` set to `pin` and an `x` tag matching `<sha256>`. It MAY include `p` tags, with the same meaning as on upload.
 
-Pinning a blob the pubkey already pins keeps the original pin date.
-
 | Status Code        | Meaning                                                                                         |
 | ------------------ | ----------------------------------------------------------------------------------------------- |
 | `200 OK`           | The blob is pinned. The body contains its [Blob Descriptor](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70u8zl0j6sh6cf8agp2grfgmkt7qqrxyaty95cryxk74nh#blob-descriptor).           |
@@ -54,7 +53,7 @@ Returns the signer's own pin on a blob. The token MUST have `t` set to `pin` and
 }
 ```
 
-`pinned` is the unix timestamp at which the pin was created. The response never reveals other pins.
+`pinned` is the unix timestamp at which the pin was created. Pinning the blob again does not change it. The response never reveals other pins.
 
 | Status Code        | Meaning                                                                                         |
 | ------------------ | ----------------------------------------------------------------------------------------------- |
@@ -64,4 +63,4 @@ Returns the signer's own pin on a blob. The token MUST have `t` set to `pin` and
 
 ## DELETE /sha256 - Delete Blob
 
-A pubkey removes its pin with `DELETE /<sha256>` ([BUD-12](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70u8zl0j6sh6cf8agp2grfgmkt7qqrxyaty95cnyqrct8v)).
+`DELETE /<sha256>` ([BUD-12](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70u8zl0j6sh6cf8agp2grfgmkt7qqrxyaty95cnyqrct8v)) removes the signer's pin and no other, so a pubkey that does not pin a blob cannot delete it. When the last pin is removed, the server MAY delete the blob.
