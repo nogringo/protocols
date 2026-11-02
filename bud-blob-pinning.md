@@ -2,7 +2,7 @@
 
 `draft` `optional`
 
-A pin is a pubkey's request that a server keep a blob. This BUD lets a client pin a blob for itself or for other pubkeys, pin a blob the server already stores without uploading it, and read its own pin. It adds the `pin` verb to [BUD-11](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70u8zl0j6sh6cf8agp2grfgmkt7qqrxyaty95cnzuvmwmm).
+A pin is a pubkey's request that a server keep a blob. This BUD lets a client pin a blob for itself or for other pubkeys, pin a blob the server already stores without uploading it, and read its own pin. It also lets a server serve a blob only to the pubkeys that pin it. It adds the `pin` verb to [BUD-11](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70u8zl0j6sh6cf8agp2grfgmkt7qqrxyaty95cnzuvmwmm).
 
 ## PUT /upload and PUT /mirror
 
@@ -64,3 +64,7 @@ Returns the signer's own pin on a blob. The token MUST have `t` set to `pin` and
 ## DELETE /sha256 - Delete Blob
 
 `DELETE /<sha256>` ([BUD-12](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70u8zl0j6sh6cf8agp2grfgmkt7qqrxyaty95cnyqrct8v)) removes the signer's pin and no other, so a pubkey that does not pin a blob cannot delete it. When the last pin is removed, the server MAY delete the blob.
+
+## Private server
+
+A server MAY serve a blob only to the pubkeys that pin it, and act toward any other pubkey as if it did not store the blob. Clients then request blobs with a `get` token ([BUD-11](nostr:naddr1qvzqqqrcvypzqyek59lpv8gw3tetdrhfttf2g70u8zl0j6sh6cf8agp2grfgmkt7qqrxyaty95cnzuvmwmm)).

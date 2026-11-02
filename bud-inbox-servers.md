@@ -21,7 +21,7 @@ A kind `11708` event lists its author's inbox servers, with the `server` tags of
 
 ## Inbox server
 
-An inbox server MAY serve a blob only to the pubkeys that pin it, and act toward any other pubkey as if it did not store the blob. A sender then cannot tell whether or when the recipient deleted it.
+When an inbox server serves a blob only to the pubkeys that pin it ([Blob pinning](nostr:naddr1qqgxyaty943xcmmz94cxjmnwd9hxwq3qkg4sdvz3l4fr99n2jdz2vdxe2mpacva87hkdetv76ywacsfq5leqxpqqqpuxz7xega9#private-server)), a sender cannot tell whether or when the recipient deleted it.
 
 ## Sending a blob
 
