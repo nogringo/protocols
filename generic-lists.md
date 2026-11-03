@@ -27,5 +27,6 @@ Generic lists use `kind: 36205`. The `d` tag names the list. Tag layout and encr
 
 | name | description | spec |
 | ---- | ----------- | ---- |
+| `home-relays` | candidate relays for computing home relays | Computed Home Relays |
 | `trusted-auth-relays` | relays to authenticate to without asking the user | Trusted Auth Relays |
 | `trusted-domains` | domains to open without a security warning | Trusted Domains |
