@@ -16,6 +16,7 @@ To register a push subscription, users may create a `kind 30390` event. This eve
 - `ignore` - an nostr filter for ignoring matched events (optional, may appear multiple times)
 - `callback` - a URL indicating a callback url to forward events to
 - `include_event` - if included, relays MUST agree to include the complete `event` data in the push payload or reject the subscription
+- `ignore_self` - if included, relays SHOULD NOT push events received over a connection authenticated as the subscription author with [NIP 42](nostr:naddr1qvzqqqrcvypzq2eeknl7v2fnm7tsuxfkds3vrcyjl9fls070a465urcy6k3mgk0eqqrxu6ts956ryv4r3t9)
 
 If a relay does not intend to fulfill the subscription, it SHOULD respond with an `OK` message with `false` as the result and a human-readable message.
 
