@@ -26,7 +26,7 @@ When a relay receives a new event, it SHOULD match it against all current regist
 ```typescript
 {
   id: string          // The event's id
-  relay: string       // The normalized url of the relay sending the notification
+  relay: string       // The normalized url of the relay where the event was received
   event?: Event       // The event itself, if the subscription specifies `include_event`
 }
 ```
