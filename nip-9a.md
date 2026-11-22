@@ -19,6 +19,8 @@ To register a push subscription, users may create a `kind 30390` event. This eve
 
 If a relay does not intend to fulfill the subscription, it SHOULD respond with an `OK` message with `false` as the result and a human-readable message.
 
+Before accepting a subscription, relays MUST verify the `callback` by sending it a `GET` request with a random `challenge` query parameter appended. Relays MUST reject the subscription unless the response has a `2xx` status code and a body that is exactly the `challenge` value.
+
 When a relay receives a new event, it SHOULD match it against all current registrations and forward the event to authorized users by sending a `POST` request to the `callback` URL with `Content-Type: application/json`. The payload should be as follows:
 
 ```typescript
