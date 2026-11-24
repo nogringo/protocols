@@ -14,13 +14,13 @@ To register a push subscription, users may create a `kind 30390` event. This eve
 - `relay` - a nostr relay URL to monitor (may appear multiple times)
 - `filter` - a nostr filter for matching events (may appear multiple times)
 - `ignore` - an nostr filter for ignoring matched events (optional, may appear multiple times)
+- `ignore_self` - if included, relays SHOULD NOT push events received over a connection authenticated as the subscription author with [NIP 42](nostr:naddr1qvzqqqrcvypzq2eeknl7v2fnm7tsuxfkds3vrcyjl9fls070a465urcy6k3mgk0eqqrxu6ts956ryv4r3t9)
 - `callback` - a URL indicating a callback url to forward events to
 - `include_event` - if included, relays MUST agree to include the complete `event` data in the push payload or reject the subscription
-- `ignore_self` - if included, relays SHOULD NOT push events received over a connection authenticated as the subscription author with [NIP 42](nostr:naddr1qvzqqqrcvypzq2eeknl7v2fnm7tsuxfkds3vrcyjl9fls070a465urcy6k3mgk0eqqrxu6ts956ryv4r3t9)
+
+Before accepting a subscription, relays MUST verify the `callback` by sending it a `GET` request with a random `challenge` query parameter appended, and MUST reject the subscription unless the response has a `2xx` status code and a body that is exactly the `challenge` value.
 
 If a relay does not intend to fulfill the subscription, it SHOULD respond with an `OK` message with `false` as the result and a human-readable message.
-
-Before accepting a subscription, relays MUST verify the `callback` by sending it a `GET` request with a random `challenge` query parameter appended. Relays MUST reject the subscription unless the response has a `2xx` status code and a body that is exactly the `challenge` value.
 
 When a relay receives a new event, it SHOULD match it against all current registrations and forward the event to authorized users by sending a `POST` request to the `callback` URL with `Content-Type: application/json`. The payload should be as follows:
 
