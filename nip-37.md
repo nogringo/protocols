@@ -65,6 +65,6 @@ The event MUST include a list of `relay` URLs in private tags. Private tags are 
 }
 ```
 
-It's recommended that Private Storage relays SHOULD be [NIP-42](nostr:naddr1qvzqqqrcvypzq2eeknl7v2fnm7tsuxfkds3vrcyjl9fls070a465urcy6k3mgk0eqqrxu6ts956ryv4r3t9)-authed and only allow downloads of events signed by the authed user.
+It's recommended that Private Storage relays SHOULD be [NIP-42](nostr:naddr1qvzqqqrcvypzq2eeknl7v2fnm7tsuxfkds3vrcyjl9fls070a465urcy6k3mgk0eqqrxu6ts956ryv4r3t9)-authed and only serve events to the authed user who uploaded them.
 
 Clients MUST publish kind `10013` events to the author's [NIP-65](nostr:naddr1qqrxu6ts95mr2q3q9vumfllx9yeal9cwrymxcgkpuzf0j5lc8l876a2wpuzdtga5t8usxpqqqpuxzh6n870) `write` relays. 
